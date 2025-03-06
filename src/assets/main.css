@@ -3,7 +3,7 @@
 #app {
   max-width: 720px;
   margin: 0 auto;
-  padding: 0 2em;
+  padding: 0 1em;
   font-weight: normal;
   min-height: 100vh;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
