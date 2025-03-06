@@ -5,8 +5,7 @@
 
   <a-layout-content>
     <div class="content">
-      <a-auto-complete v-model:value="search" placeholder="Search city..." class="search-input" />
-      <a-button><SearchOutlined /></a-button>
+      <SearchBar @search="onSearch" />
       <a-button type="primary" @click="useCurrentLocation">
         <EnvironmentOutlined />
       </a-button>
@@ -16,13 +15,14 @@
 
 <script setup lang="ts">
 import { EnvironmentOutlined } from '@ant-design/icons-vue'
-import { SearchOutlined } from '@ant-design/icons-vue'
-import { ref } from 'vue'
-
-const search = ref('')
+import SearchBar from '@/components/SearchBar.vue'
 
 function useCurrentLocation() {
   alert('Your location')
+}
+
+function onSearch() {
+  console.log('search')
 }
 </script>
 
