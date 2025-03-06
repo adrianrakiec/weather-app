@@ -6,7 +6,7 @@
   <a-layout-content>
     <div class="content">
       <SearchBar @search="onSearch" />
-      <a-button type="primary" @click="useCurrentLocation">
+      <a-button type="primary" @click="useCurrentLocation" class="location-btn">
         <EnvironmentOutlined />
       </a-button>
     </div>
@@ -15,14 +15,16 @@
 
 <script setup lang="ts">
 import { EnvironmentOutlined } from '@ant-design/icons-vue'
+import { weatherService } from '@/services/weather.service'
 import SearchBar from '@/components/SearchBar.vue'
 
 function useCurrentLocation() {
   alert('Your location')
 }
 
-function onSearch() {
-  console.log('search')
+async function onSearch(cityName: string) {
+  const results = await weatherService.getCoordinatesByCity(cityName)
+  console.log(results)
 }
 </script>
 
@@ -39,5 +41,9 @@ function onSearch() {
   display: flex;
   gap: 0.1em;
   padding: 0 1em;
+}
+
+.location-btn {
+  height: auto;
 }
 </style>
