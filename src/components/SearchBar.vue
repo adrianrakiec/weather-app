@@ -41,6 +41,7 @@ const debouncedFetchCities = debounce(fetchCities, 600)
 function onClick() {
   emit('search', search.value)
   search.value = ''
+  cityOptions.value = []
 }
 </script>
 
