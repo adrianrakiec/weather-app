@@ -18,11 +18,14 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { EnvironmentOutlined } from '@ant-design/icons-vue'
 import { weatherService } from '@/services/weather.service'
 import SearchBar from '@/components/SearchBar.vue'
 import type { CityInfo } from '@/types/city'
 import ResultsList from '@/components/ResultsList.vue'
+
+const router = useRouter()
 
 const results = ref<CityInfo[]>([])
 const loading = ref(false)
@@ -31,7 +34,21 @@ const isResults = computed(() => {
 })
 
 function useCurrentLocation() {
-  alert('Your location')
+  if (!navigator.geolocation) {
+    alert('Geolocation is unsupported!')
+    return
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      const { latitude, longitude } = position.coords
+      router.push({ path: '/weather', query: { lat: latitude, lon: longitude } })
+    },
+    (error) => {
+      console.error(error.message)
+      alert('The location could not be downloaded. Check your browser settings.')
+    },
+  )
 }
 
 async function onSearch(cityName: string) {
