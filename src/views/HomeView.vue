@@ -11,6 +11,8 @@
       </a-button>
     </div>
 
+    <SearchHistoryList :history="searchHistoryStore.history" />
+
     <ResultsList v-if="weatherStore.isResults" :data="weatherStore.results" />
     <a-skeleton v-if="weatherStore.loading" active />
   </a-layout-content>
@@ -20,11 +22,14 @@
 import { useRouter, onBeforeRouteLeave } from 'vue-router'
 import { EnvironmentOutlined } from '@ant-design/icons-vue'
 import { useWeatherStore } from '@/stores/useWeatherStore'
+import { useSavedWeatherStore } from '@/stores/useSavedWeatherStore'
 import SearchBar from '@/components/SearchBar.vue'
 import ResultsList from '@/components/ResultsList.vue'
+import SearchHistoryList from '@/components/SearchHistoryList.vue'
 
 const router = useRouter()
 const weatherStore = useWeatherStore()
+const searchHistoryStore = useSavedWeatherStore()
 
 function useCurrentLocation() {
   if (!navigator.geolocation) {
