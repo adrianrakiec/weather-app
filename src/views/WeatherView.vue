@@ -4,9 +4,7 @@
       <a-flex align="center" justify="space-between" class="header-flex">
         <a-flex align="center">
           <a-button type="primary" @click="goBack"><ArrowLeftOutlined /></a-button>
-          <a-typography-title :level="3" class="title">{{
-            data?.name || 'Loading...'
-          }}</a-typography-title>
+          <a-typography-title :level="3" class="title">{{ data?.name || '' }}</a-typography-title>
         </a-flex>
         <a-button><PlusCircleOutlined /></a-button>
       </a-flex>
@@ -18,16 +16,20 @@
       <a-skeleton v-if="!data" active />
 
       <template v-else>
-        <img :src="`/weather/${data.icon}.png`" alt="weather icon" class="weather-icon" />
+        <img
+          :src="`/weather/${data.weather[0].icon}.png`"
+          alt="weather icon"
+          class="weather-icon"
+        />
         <a-typography-paragraph class="temperature">
-          {{ Math.round(data.temperature) }}°
+          {{ Math.round(data.main.temp) }}°
         </a-typography-paragraph>
         <a-flex gap="large">
           <a-typography-paragraph class="sun-info">
-            Sunrise: {{ timeFormat(data.sunrise) }}
+            Sunrise: {{ timeFormat(data.sys.sunrise) }}
           </a-typography-paragraph>
           <a-typography-paragraph class="sun-info">
-            Sunset: {{ timeFormat(data.sunset) }}
+            Sunset: {{ timeFormat(data.sys.sunset) }}
           </a-typography-paragraph>
         </a-flex>
       </template>
@@ -39,14 +41,15 @@
 import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { PlusCircleOutlined, ArrowLeftOutlined } from '@ant-design/icons-vue'
-import { weatherService } from '@/services/weather.service'
+import { useWeatherStore } from '@/stores/weatherStore'
 import { timeFormat } from '@/helpers/timeFormat'
-import type { CityWeather } from '@/types/city'
+import type { WeatherResponse } from '@/types/weather'
 
 const route = useRoute()
 const router = useRouter()
+const weatherStore = useWeatherStore()
 
-const data = ref<CityWeather | null>(null)
+const data = ref<WeatherResponse | null>(null)
 
 const goBack = () => {
   router.push('/')
@@ -56,7 +59,7 @@ onMounted(async () => {
   try {
     const lat = Number(route.query.lat)
     const lon = Number(route.query.lon)
-    data.value = await weatherService.getWeatherByCoordinates(lat, lon)
+    data.value = await weatherStore.fetchWeather(lat, lon)
   } catch {
     router.push({ path: '/' })
   }

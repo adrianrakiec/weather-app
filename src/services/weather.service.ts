@@ -29,15 +29,8 @@ export const weatherService = {
           units: 'metric',
         },
       })
-      const data = response.data
 
-      return {
-        icon: data.weather[0].icon,
-        temperature: data.main.temp,
-        sunrise: data.sys.sunrise,
-        sunset: data.sys.sunset,
-        name: data.name
-      }
+      return response.data
     } catch (error) {
       throw new Error(`Error fetching weather: ${error}`)
     }
