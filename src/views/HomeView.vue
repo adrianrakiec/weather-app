@@ -19,7 +19,7 @@
 <script setup lang="ts">
 import { useRouter, onBeforeRouteLeave } from 'vue-router'
 import { EnvironmentOutlined } from '@ant-design/icons-vue'
-import { useWeatherStore } from '@/stores/weatherStore'
+import { useWeatherStore } from '@/stores/useWeatherStore'
 import SearchBar from '@/components/SearchBar.vue'
 import ResultsList from '@/components/ResultsList.vue'
 

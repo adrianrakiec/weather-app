@@ -41,13 +41,15 @@
 import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { PlusCircleOutlined, ArrowLeftOutlined } from '@ant-design/icons-vue'
-import { useWeatherStore } from '@/stores/weatherStore'
+import { useWeatherStore } from '@/stores/useWeatherStore'
+import { useSearchHistoryStore } from '@/stores/useSearchHistoryStore'
 import { timeFormat } from '@/helpers/timeFormat'
 import type { WeatherResponse } from '@/types/weather'
 
 const route = useRoute()
 const router = useRouter()
 const weatherStore = useWeatherStore()
+const searchHistoryStore = useSearchHistoryStore()
 
 const data = ref<WeatherResponse | null>(null)
 
@@ -60,6 +62,8 @@ onMounted(async () => {
     const lat = Number(route.query.lat)
     const lon = Number(route.query.lon)
     data.value = await weatherStore.fetchWeather(lat, lon)
+
+    searchHistoryStore.addSearch({ name: data.value.name, lat, lon })
   } catch {
     router.push({ path: '/' })
   }
