@@ -36,6 +36,7 @@ export const weatherService = {
         temperature: data.main.temp,
         sunrise: data.sys.sunrise,
         sunset: data.sys.sunset,
+        name: data.name
       }
     } catch (error) {
       throw new Error(`Error fetching weather: ${error}`)

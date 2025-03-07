@@ -6,3 +6,11 @@ export type CityInfo = {
   country: string
   state: string
 }
+
+export type CityWeather = {
+  icon: string
+  temperature: number
+  sunrise: number
+  sunset: number
+  name: string
+}

@@ -2,7 +2,7 @@
   <a-list size="large" bordered :data-source="data">
     <template #renderItem="{ item }">
       <a-list-item>
-        <router-link :to="item.name" class="city-item"
+        <router-link :to="`/weather?lat=${item.lat}&lon=${item.lon}`" class="city-item"
           >{{ item.name }}, {{ item.state }}, {{ item.country }}</router-link
         >
       </a-list-item>

@@ -11,7 +11,7 @@ const router = createRouter({
       component: HomeView,
     },
     {
-      path: '/:city',
+      path: '/weather',
       name: 'weather',
       component: WeatherView,
     },
