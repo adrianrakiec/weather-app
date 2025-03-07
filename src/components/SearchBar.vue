@@ -19,12 +19,15 @@ import { weatherService } from '@/services/weather.service'
 const emit = defineEmits(['search'])
 const search = ref('')
 const cityOptions = ref<{ value: string; label: string; key: string }[]>([])
+const isFetchCanceled = ref(false)
 
 const fetchCities = async (query: string) => {
   if (!query) return
 
   try {
     const data = await weatherService.getCoordinatesByCity(query)
+
+    if (isFetchCanceled.value) return
 
     cityOptions.value = data.map((city) => ({
       value: `${city.name}, ${city.state}, ${city.country}`,
@@ -33,6 +36,8 @@ const fetchCities = async (query: string) => {
     }))
   } catch (error) {
     console.error('Error fetching cities:', error)
+  } finally {
+    isFetchCanceled.value = false
   }
 }
 
@@ -42,6 +47,7 @@ function onClick() {
   emit('search', search.value)
   search.value = ''
   cityOptions.value = []
+  isFetchCanceled.value = true
 }
 </script>
 
