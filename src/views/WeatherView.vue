@@ -48,11 +48,12 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, computed } from 'vue'
+import { onMounted, ref, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { PlusCircleOutlined, ArrowLeftOutlined, DeleteOutlined } from '@ant-design/icons-vue'
 import { useWeatherStore } from '@/stores/useWeatherStore'
 import { useSavedWeatherStore } from '@/stores/useSavedWeatherStore'
+import { useNotificationStore } from '@/stores/useNotificationStore'
 import { timeFormat } from '@/helpers/timeFormat'
 import type { WeatherResponse } from '@/types/weather'
 import type { SearchEntry } from '@/types/search'
@@ -61,6 +62,7 @@ const route = useRoute()
 const router = useRouter()
 const weatherStore = useWeatherStore()
 const savedWeatherStore = useSavedWeatherStore()
+const notificationStore = useNotificationStore()
 
 const data = ref<WeatherResponse | null>(null)
 
@@ -84,8 +86,10 @@ function toggleSavedWeather() {
 
   if (isSaved.value) {
     savedWeatherStore.removeSavedWeather(entry)
+    notificationStore.showSuccess('Location has been deleted!')
   } else {
     savedWeatherStore.addSavedWeather(entry)
+    notificationStore.showSuccess('Location has been saved!')
   }
 }
 
@@ -93,7 +97,7 @@ function goBack() {
   router.push('/')
 }
 
-onMounted(async () => {
+const fetchWeatherData = async () => {
   const lat = Number(route.query.lat)
   const lon = Number(route.query.lon)
   data.value = await weatherStore.fetchWeather(lat, lon)
@@ -101,9 +105,20 @@ onMounted(async () => {
   if (data.value) {
     savedWeatherStore.addToHistory({ name: data.value.name, lat, lon })
   } else {
-    router.push('/')
+    goBack()
   }
+}
+
+onMounted(() => {
+  fetchWeatherData()
 })
+
+watch(
+  () => [route.query.lat, route.query.lon],
+  () => {
+    fetchWeatherData()
+  },
+)
 </script>
 
 <style scoped>
