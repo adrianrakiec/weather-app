@@ -4,9 +4,17 @@
       <a-flex align="center" justify="space-between" class="header-flex">
         <a-flex align="center">
           <a-button type="primary" @click="goBack"><ArrowLeftOutlined /></a-button>
-          <a-typography-title :level="3" class="title">{{ data?.name || '' }}</a-typography-title>
+          <a-typography-title :level="3" class="title">{{ data?.name || 'Loading...' }}</a-typography-title>
         </a-flex>
-        <a-button><PlusCircleOutlined /></a-button>
+
+        <a-button @click="toggleSavedWeather">
+          <template v-if="isSaved">
+            <DeleteOutlined />
+          </template>
+          <template v-else>
+            <PlusCircleOutlined />
+          </template>
+        </a-button>
       </a-flex>
     </div>
   </a-layout-header>
@@ -38,22 +46,48 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { PlusCircleOutlined, ArrowLeftOutlined } from '@ant-design/icons-vue'
+import { PlusCircleOutlined, ArrowLeftOutlined, DeleteOutlined } from '@ant-design/icons-vue'
 import { useWeatherStore } from '@/stores/useWeatherStore'
 import { useSavedWeatherStore } from '@/stores/useSavedWeatherStore'
 import { timeFormat } from '@/helpers/timeFormat'
 import type { WeatherResponse } from '@/types/weather'
+import type { SearchEntry } from '@/types/search'
 
 const route = useRoute()
 const router = useRouter()
 const weatherStore = useWeatherStore()
-const searchHistoryStore = useSavedWeatherStore()
+const savedWeatherStore = useSavedWeatherStore()
 
 const data = ref<WeatherResponse | null>(null)
 
-const goBack = () => {
+const isSaved = computed(() => {
+  if (!data.value) return false
+  return savedWeatherStore.isSavedWeather({
+    name: data.value.name,
+    lat: data.value.coord.lat,
+    lon: data.value.coord.lon,
+  })
+})
+
+function toggleSavedWeather() {
+  if (!data.value) return
+
+  const entry: SearchEntry = {
+    name: data.value.name,
+    lat: data.value.coord.lat,
+    lon: data.value.coord.lon,
+  }
+
+  if (isSaved.value) {
+    savedWeatherStore.removeSavedWeather(entry)
+  } else {
+    savedWeatherStore.addSavedWeather(entry)
+  }
+}
+
+function goBack() {
   router.push('/')
 }
 
@@ -63,7 +97,7 @@ onMounted(async () => {
     const lon = Number(route.query.lon)
     data.value = await weatherStore.fetchWeather(lat, lon)
 
-    searchHistoryStore.addToHistory({ name: data.value.name, lat, lon })
+    savedWeatherStore.addToHistory({ name: data.value.name, lat, lon })
   } catch {
     router.push({ path: '/' })
   }

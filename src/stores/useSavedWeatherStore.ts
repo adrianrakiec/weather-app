@@ -56,6 +56,10 @@ export const useSavedWeatherStore = defineStore('savedWeather', () => {
     localStorage.removeItem(STORAGE_KEY)
   }
 
+  const isSavedWeather = (entry: SearchEntry) => {
+    return savedWeather.value.some((item) => item.lat === entry.lat && item.lon === entry.lon)
+  }
+
   loadSavedWeather()
 
   watch(savedWeather, saveSavedWeather, { deep: true })
@@ -67,5 +71,6 @@ export const useSavedWeatherStore = defineStore('savedWeather', () => {
     removeSavedWeather,
     clearSavedWeather,
     addToHistory,
+    isSavedWeather,
   }
 })
