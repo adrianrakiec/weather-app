@@ -38,5 +38,5 @@ export const useNotificationStore = defineStore('notification', () => {
     showError(errorMessage, timeout)
   }
 
-  return { message, type, showSuccess, handleError }
+  return { message, type, clearMessage, showSuccess, handleError }
 })
