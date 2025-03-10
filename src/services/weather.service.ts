@@ -15,8 +15,8 @@ export const weatherService = {
       })
 
       return response.data
-    } catch (error) {
-      throw new Error(`Error fetching coordinates: ${error}`)
+    } catch {
+      throw new Error('No results')
     }
   },
 
@@ -31,8 +31,8 @@ export const weatherService = {
       })
 
       return response.data
-    } catch (error) {
-      throw new Error(`Error fetching weather: ${error}`)
+    } catch {
+      throw new Error('Location not found')
     }
   },
 }

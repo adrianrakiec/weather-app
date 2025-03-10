@@ -4,7 +4,9 @@
       <a-flex align="center" justify="space-between" class="header-flex">
         <a-flex align="center">
           <a-button type="primary" @click="goBack"><ArrowLeftOutlined /></a-button>
-          <a-typography-title :level="3" class="title">{{ data?.name || 'Loading...' }}</a-typography-title>
+          <a-typography-title :level="3" class="title">{{
+            data?.name || 'Loading...'
+          }}</a-typography-title>
         </a-flex>
 
         <a-button @click="toggleSavedWeather">
@@ -92,14 +94,14 @@ function goBack() {
 }
 
 onMounted(async () => {
-  try {
-    const lat = Number(route.query.lat)
-    const lon = Number(route.query.lon)
-    data.value = await weatherStore.fetchWeather(lat, lon)
+  const lat = Number(route.query.lat)
+  const lon = Number(route.query.lon)
+  data.value = await weatherStore.fetchWeather(lat, lon)
 
+  if (data.value) {
     savedWeatherStore.addToHistory({ name: data.value.name, lat, lon })
-  } catch {
-    router.push({ path: '/' })
+  } else {
+    router.push('/')
   }
 })
 </script>
