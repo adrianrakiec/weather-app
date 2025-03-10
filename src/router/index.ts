@@ -15,6 +15,10 @@ const router = createRouter({
       name: 'weather',
       component: WeatherView,
     },
+    {
+      path: '/:pathMatch(.*)*',
+      redirect: '/',
+    },
   ],
 })
 

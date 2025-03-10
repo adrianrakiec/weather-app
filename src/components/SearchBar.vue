@@ -43,7 +43,7 @@ const fetchCities = async (query: string) => {
 
 const debouncedFetchCities = debounce(fetchCities, 600)
 
-function onClick() {
+const onClick = () => {
   emit('search', search.value)
   search.value = ''
   cityOptions.value = []

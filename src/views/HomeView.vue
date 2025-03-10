@@ -31,7 +31,7 @@ const router = useRouter()
 const weatherStore = useWeatherStore()
 const searchHistoryStore = useSavedWeatherStore()
 
-function useCurrentLocation() {
+const useCurrentLocation = () => {
   if (!navigator.geolocation) {
     alert('Geolocation is unsupported!')
     return

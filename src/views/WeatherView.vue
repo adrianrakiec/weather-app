@@ -24,7 +24,6 @@
   <a-layout-content>
     <a-flex vertical align="center">
       <a-skeleton v-if="!data" active />
-
       <template v-else>
         <img
           :src="`/weather/${data.weather[0].icon}.png`"
@@ -75,7 +74,7 @@ const isSaved = computed(() => {
   })
 })
 
-function toggleSavedWeather() {
+const toggleSavedWeather = () => {
   if (!data.value) return
 
   const entry: SearchEntry = {
@@ -93,7 +92,7 @@ function toggleSavedWeather() {
   }
 }
 
-function goBack() {
+const goBack = () => {
   router.push('/')
 }
 

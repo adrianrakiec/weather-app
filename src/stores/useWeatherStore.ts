@@ -14,7 +14,7 @@ export const useWeatherStore = defineStore('weather', () => {
 
   const isResults = computed(() => results.value.length > 0)
 
-  async function searchCity(cityName: string) {
+  const searchCity = async (cityName: string) => {
     loading.value = true
     results.value = []
     try {
@@ -28,7 +28,7 @@ export const useWeatherStore = defineStore('weather', () => {
     return results.value
   }
 
-  async function fetchWeather(lat: number, lon: number) {
+  const fetchWeather = async (lat: number, lon: number) => {
     loading.value = true
     try {
       weatherData.value = await weatherService.getWeatherByCoordinates(lat, lon)
