@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { weatherService } from '@/services/weather.service'
+import { useNotificationStore } from '@/stores/useNotificationStore'
 import type { CityInfo } from '@/types/city'
 import type { WeatherResponse } from '@/types/weather'
 
@@ -9,6 +10,8 @@ export const useWeatherStore = defineStore('weather', () => {
   const weatherData = ref<WeatherResponse | null>(null)
   const loading = ref(false)
 
+  const notificationStore = useNotificationStore()
+
   const isResults = computed(() => results.value.length > 0)
 
   async function searchCity(cityName: string) {
@@ -16,6 +19,8 @@ export const useWeatherStore = defineStore('weather', () => {
     results.value = []
     try {
       results.value = await weatherService.getCoordinatesByCity(cityName)
+    } catch (e) {
+      notificationStore.handleError(e)
     } finally {
       loading.value = false
     }
@@ -27,6 +32,8 @@ export const useWeatherStore = defineStore('weather', () => {
     loading.value = true
     try {
       weatherData.value = await weatherService.getWeatherByCoordinates(lat, lon)
+    } catch (e) {
+      notificationStore.handleError(e)
     } finally {
       loading.value = false
     }
