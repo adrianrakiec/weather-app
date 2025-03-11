@@ -14,6 +14,7 @@
     <SearchHistoryList :history="searchHistoryStore.history" />
 
     <ResultsList v-if="weatherStore.isResults" :data="weatherStore.results" />
+    <a-empty v-else-if="weatherStore.showEmptyState" description="No results found" />
     <a-skeleton v-if="weatherStore.loading" active />
   </a-layout-content>
 </template>
