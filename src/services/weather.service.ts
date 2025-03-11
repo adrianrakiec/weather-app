@@ -16,7 +16,7 @@ export const weatherService = {
 
       return response.data
     } catch {
-      throw new Error('No results')
+      throw new Error('Error fetching city')
     }
   },
 

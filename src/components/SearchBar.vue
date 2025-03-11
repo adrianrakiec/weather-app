@@ -44,10 +44,12 @@ const fetchCities = async (query: string) => {
 const debouncedFetchCities = debounce(fetchCities, 600)
 
 const onClick = () => {
-  emit('search', search.value)
-  search.value = ''
-  cityOptions.value = []
-  isFetchCanceled.value = true
+  if (search.value) {
+    emit('search', search.value)
+    search.value = ''
+    cityOptions.value = []
+    isFetchCanceled.value = true
+  }
 }
 </script>
 

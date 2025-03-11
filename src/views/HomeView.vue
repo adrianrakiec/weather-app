@@ -27,14 +27,16 @@ import { useSavedWeatherStore } from '@/stores/useSavedWeatherStore'
 import SearchBar from '@/components/SearchBar.vue'
 import ResultsList from '@/components/ResultsList.vue'
 import SearchHistoryList from '@/components/SearchHistoryList.vue'
+import { useNotificationStore } from '@/stores/useNotificationStore'
 
 const router = useRouter()
 const weatherStore = useWeatherStore()
 const searchHistoryStore = useSavedWeatherStore()
+const notificationStore = useNotificationStore()
 
 const useCurrentLocation = () => {
   if (!navigator.geolocation) {
-    alert('Geolocation is unsupported!')
+    notificationStore.handleError('Geolocation is unsupported!')
     return
   }
 
@@ -45,7 +47,9 @@ const useCurrentLocation = () => {
     },
     (error) => {
       console.error(error.message)
-      alert('The location could not be downloaded. Check your browser settings.')
+      notificationStore.handleError(
+        'The location could not be downloaded. Check your browser settings.',
+      )
     },
   )
 }
@@ -56,6 +60,7 @@ const searchCity = (cityName: string) => {
 
 onBeforeRouteLeave(() => {
   weatherStore.results = []
+  weatherStore.hasNavigatedAway = true
 })
 </script>
 

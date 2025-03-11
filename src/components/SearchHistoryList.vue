@@ -3,8 +3,8 @@
     <a-typography-title :level="4" class="history-title">Recent searches</a-typography-title>
     <div class="history-list">
       <router-link
-        v-for="(entry, index) in history"
-        :key="index"
+        v-for="entry in history"
+        :key="`${entry.name}-${entry.lat}-${entry.lon}`"
         :to="`/weather?lat=${entry.lat}&lon=${entry.lon}`"
         class="history-item"
       >
@@ -55,7 +55,6 @@ defineProps({
 }
 
 .history-item:hover {
-  background-color: #e6f7ff;
-  color: #0056b3;
+  background-color: #0056b3;
 }
 </style>

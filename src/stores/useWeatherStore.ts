@@ -10,18 +10,24 @@ export const useWeatherStore = defineStore('weather', () => {
   const weatherData = ref<WeatherResponse | null>(null)
   const loading = ref(false)
   const searchExecuted = ref(false)
+  const hasNavigatedAway = ref(false)
 
   const notificationStore = useNotificationStore()
 
   const isResults = computed(() => results.value.length > 0)
   const showEmptyState = computed(
-    () => searchExecuted.value && !loading.value && results.value.length === 0,
+    () =>
+      searchExecuted.value &&
+      !loading.value &&
+      results.value.length === 0 &&
+      !hasNavigatedAway.value,
   )
 
   const searchCity = async (cityName: string) => {
     loading.value = true
     searchExecuted.value = false
-    results.value = []
+    hasNavigatedAway.value = false
+
     try {
       results.value = await weatherService.getCoordinatesByCity(cityName)
     } catch (e) {
@@ -47,5 +53,5 @@ export const useWeatherStore = defineStore('weather', () => {
     return weatherData.value
   }
 
-  return { results, loading, isResults, showEmptyState, searchCity, fetchWeather }
+  return { results, loading, isResults, showEmptyState, hasNavigatedAway, searchCity, fetchWeather }
 })
