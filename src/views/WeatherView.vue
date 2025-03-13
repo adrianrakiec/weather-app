@@ -24,7 +24,10 @@
   <a-layout-content>
     <a-flex vertical align="center">
       <a-skeleton v-if="!data" active />
-      <BasicWeather v-else :data="data" />
+      <a-tabs v-else class="weather-tabs" size="large">
+        <a-tab-pane key="1" tab="Current"><BasicWeather :data="data" /></a-tab-pane>
+        <a-tab-pane key="2" tab="Forecast"><ForecastWeather /></a-tab-pane>
+      </a-tabs>
     </a-flex>
   </a-layout-content>
 </template>
@@ -39,6 +42,7 @@ import { useNotificationStore } from '@/stores/useNotificationStore'
 import type { WeatherResponse } from '@/types/weather'
 import type { SearchEntry } from '@/types/search'
 import BasicWeather from '@/components/BasicWeather.vue'
+import ForecastWeather from '@/components/ForecastWeather.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -111,5 +115,9 @@ watch(
 .title {
   font-size: 2.5rem;
   margin: 0 0.5em;
+}
+
+.weather-tabs {
+  width: calc(100% - 1em);
 }
 </style>

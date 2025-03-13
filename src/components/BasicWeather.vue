@@ -34,28 +34,24 @@
     <a-flex justify="space-around" class="sun-times">
       <div>
         <a-typography-text class="info-label">Sunrise: </a-typography-text>
-        <a-typography-text class="info-value">{{ timeFormat(sunrise) }}</a-typography-text>
+        <a-typography-text class="info-value">{{ timeFormat(data.sys.sunrise) }}</a-typography-text>
       </div>
       <div>
-        <a-typography-text class="info-label">Sunset :</a-typography-text>
-        <a-typography-text class="info-value">{{ timeFormat(sunset) }}</a-typography-text>
+        <a-typography-text class="info-label">Sunset: </a-typography-text>
+        <a-typography-text class="info-value">{{ timeFormat(data.sys.sunset) }}</a-typography-text>
       </div>
     </a-flex>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 import { timeFormat } from '@/helpers/timeFormat'
 import type { WeatherResponse } from '@/types/weather'
 
 interface BasicWeatherProps {
   data: WeatherResponse
 }
-const { data } = defineProps<BasicWeatherProps>()
-
-const sunrise = ref(Math.min(data.sys.sunrise, data.sys.sunset))
-const sunset = ref(Math.max(data.sys.sunrise, data.sys.sunset))
+defineProps<BasicWeatherProps>()
 </script>
 
 <style scoped>
@@ -70,6 +66,7 @@ const sunset = ref(Math.max(data.sys.sunrise, data.sys.sunset))
 .temperature {
   font-size: 3rem;
   font-weight: bold;
+  margin-bottom: 0;
 }
 
 .info-label {
