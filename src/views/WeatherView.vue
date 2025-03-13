@@ -24,24 +24,7 @@
   <a-layout-content>
     <a-flex vertical align="center">
       <a-skeleton v-if="!data" active />
-      <template v-else>
-        <img
-          :src="`/weather/${data.weather[0].icon}.png`"
-          alt="weather icon"
-          class="weather-icon"
-        />
-        <a-typography-paragraph class="temperature">
-          {{ Math.round(data.main.temp) }}°
-        </a-typography-paragraph>
-        <a-flex gap="large">
-          <a-typography-paragraph class="sun-info">
-            Sunrise: {{ timeFormat(data.sys.sunrise) }}
-          </a-typography-paragraph>
-          <a-typography-paragraph class="sun-info">
-            Sunset: {{ timeFormat(data.sys.sunset) }}
-          </a-typography-paragraph>
-        </a-flex>
-      </template>
+      <BasicWeather v-else :data="data" />
     </a-flex>
   </a-layout-content>
 </template>
@@ -53,9 +36,9 @@ import { PlusCircleOutlined, ArrowLeftOutlined, DeleteOutlined } from '@ant-desi
 import { useWeatherStore } from '@/stores/useWeatherStore'
 import { useSavedWeatherStore } from '@/stores/useSavedWeatherStore'
 import { useNotificationStore } from '@/stores/useNotificationStore'
-import { timeFormat } from '@/helpers/timeFormat'
 import type { WeatherResponse } from '@/types/weather'
 import type { SearchEntry } from '@/types/search'
+import BasicWeather from '@/components/BasicWeather.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -123,24 +106,10 @@ watch(
 <style scoped>
 .container {
   padding: 1em;
-  margin-bottom: 2em;
 }
 
 .title {
   font-size: 2.5rem;
   margin: 0 0.5em;
-}
-
-.weather-icon {
-  width: clamp(20%, 10rem, 45%);
-}
-
-.temperature {
-  margin-top: 0.5em;
-  font-size: 3rem;
-}
-
-.sun-info {
-  font-size: 1.2rem;
 }
 </style>
