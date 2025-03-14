@@ -1,5 +1,6 @@
 import { http } from '@/services/http.service'
 import type { CityInfo } from '@/types/city'
+import type { WeatherForecastResponse } from '@/types/forecast'
 import type { WeatherResponse } from '@/types/weather'
 
 const URL = import.meta.env.VITE_API_ENDPOINT
@@ -33,6 +34,18 @@ export const weatherService = {
       return response.data
     } catch {
       throw new Error('Location not found')
+    }
+  },
+
+  async getDailyForecast(lat: number, lon: number) {
+    try {
+      const response = await http.get<WeatherForecastResponse>(`${URL}/data/2.5/forecast`, {
+        params: { lat, lon, units: 'metric' },
+      })
+
+      return response.data
+    } catch {
+      throw new Error('Error fetching forecast')
     }
   },
 }
