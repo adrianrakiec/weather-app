@@ -14,7 +14,7 @@
 
     <a-divider />
 
-    <a-flex justify="space-between">
+    <a-flex justify="space-between" style="text-align: center">
       <div>
         <a-typography-text class="info-label">Humidity: </a-typography-text>
         <a-typography-text class="info-value">{{ data.main.humidity }}%</a-typography-text>

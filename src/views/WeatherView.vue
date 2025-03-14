@@ -26,7 +26,9 @@
       <a-skeleton v-if="!data" active />
       <a-tabs v-else class="weather-tabs" size="large">
         <a-tab-pane key="1" tab="Current"><BasicWeather :data="data" /></a-tab-pane>
-        <a-tab-pane key="2" tab="Forecast"><ForecastWeather /></a-tab-pane>
+        <a-tab-pane key="2" tab="Forecast"
+          ><ForecastWeather :lat="data.coord.lat" :lon="data.coord.lon"
+        /></a-tab-pane>
       </a-tabs>
     </a-flex>
   </a-layout-content>
