@@ -1,32 +1,23 @@
-import type { DailyWeather } from '@/types/dailyWeather'
-import type { List } from '@/types/forecast'
+import type { ForecastResult, List } from '@/types/forecast'
 
-export const getDailyWeatherInfo = (list: List[]): DailyWeather[] => {
-    const dailyTemperatures: { [key: string]: { tempDay: number; tempNight: number, icon: string } } = {}
+export const getDailyWeatherInfo = (forecastArray: List[], timezone: number): ForecastResult[] => {
+  const days: Record<string, { time: string; temperature: number; icon: string }[]> = {}
 
-    list.forEach((item) => {
-      const dateString = item.dt_txt.split(' ')[0]
+  forecastArray.forEach((item) => {
+    const localTime = new Date((item.dt + timezone) * 1000)
+    const date = localTime.toISOString().split('T')[0]
+    const time = localTime.toISOString().split('T')[1].substring(0, 5)
 
-      if (item.dt_txt.includes('12:00:00')) {
-        dailyTemperatures[dateString] = {
-          ...dailyTemperatures[dateString],
-          tempDay: item.main.temp,
-          icon: item.weather[0].icon
-        }
-      }
+    if (!days[date]) {
+      days[date] = []
+    }
 
-      if (item.dt_txt.includes('21:00:00')) {
-        dailyTemperatures[dateString] = {
-          ...dailyTemperatures[dateString],
-          tempNight: item.main.temp,
-        }
-      }
+    days[date].push({
+      time,
+      temperature: item.main.temp,
+      icon: item.weather[0].icon,
     })
+  })
 
-    return Object.keys(dailyTemperatures).map((date) => ({
-      date,
-      icon: dailyTemperatures[date].icon,
-      tempDay: dailyTemperatures[date].tempDay,
-      tempNight: dailyTemperatures[date].tempNight,
-    }))
-  }
+  return Object.entries(days).map(([date, temperatures]) => ({ date, temperatures }))
+}

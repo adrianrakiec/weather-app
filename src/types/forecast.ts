@@ -1,3 +1,12 @@
+export interface ForecastResult {
+  date: string
+  temperatures: {
+    time: string
+    temperature: number
+    icon: string
+  }[]
+}
+
 export interface WeatherForecastResponse {
   cod: string
   message: number
