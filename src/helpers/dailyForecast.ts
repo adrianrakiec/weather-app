@@ -21,3 +21,26 @@ export const getDailyWeatherInfo = (forecastArray: List[], timezone: number): Fo
 
   return Object.entries(days).map(([date, temperatures]) => ({ date, temperatures }))
 }
+
+export const getDayNightTemperatures = (
+  temperatures: {
+    time: string
+    temperature: number
+    icon: string
+  }[],
+) => {
+  const dayTemps = temperatures.filter((entry) => {
+    const hour = parseInt(entry.time.split(':')[0])
+    return hour >= 8 && hour < 16
+  })
+
+  const nightTemps = temperatures.filter((entry) => {
+    const hour = parseInt(entry.time.split(':')[0])
+    return hour >= 18 || hour < 6
+  })
+
+  const tempDay = dayTemps.length ? Math.max(...dayTemps.map((e) => e.temperature)) : 0
+  const tempNight = nightTemps.length ? Math.min(...nightTemps.map((e) => e.temperature)) : 0
+
+  return `${Math.round(tempDay)}° / ${Math.round(tempNight)}°`
+}

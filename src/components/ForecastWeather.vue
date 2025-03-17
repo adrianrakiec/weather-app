@@ -1,38 +1,48 @@
 <template>
   <a-flex vertical gap="small">
     <a-flex justify="space-between" align="center">
-      <a-typography-title :level="3" class="title">
-        Next 3-day forecast
-      </a-typography-title>
+      <a-typography-title :level="3" class="title"> Next 4-day forecast </a-typography-title>
     </a-flex>
 
-    <div class="forecast-container">
-      <a-card v-for="(day, index) in dailyWeather" :key="index" class="forecast-card">
-        <a-row align="middle">
-          <a-col :span="6">
-            <a-typography-text class="day-name">{{ getDayName(day.date) }}</a-typography-text>
-          </a-col>
-          <a-col :span="14">
-            <img :src="`/weather/${day.icon}.png`" alt="weather icon" class="weather-icon" />
-          </a-col>
-          <a-col :span="4" style="text-align: end">
-            <a-typography-text class="temperature">
-              {{ Math.round(day.tempDay) }}° / {{ Math.round(day.tempNight) }}°
-            </a-typography-text>
-          </a-col>
-        </a-row>
-      </a-card>
-    </div>
+    <a-skeleton v-if="dailyWeather.length === 0" active />
+    <a-collapse v-else>
+      <a-collapse-panel
+        v-for="(day, index) in filteredWeather"
+        :key="index"
+        class="forecast-card"
+        :show-arrow="false"
+        style="margin-bottom: 0"
+      >
+        <template #header>
+          <a-row align="middle">
+            <a-col :span="6">
+              <a-typography-text class="day-name">{{ getDayName(day.date) }}</a-typography-text>
+            </a-col>
+            <a-col :span="14">
+              <img
+                :src="`/weather/${day.temperatures[Math.floor(day.temperatures.length / 2)].icon}.png`"
+                alt="weather icon"
+                class="weather-icon"
+              />
+            </a-col>
+            <a-col :span="4" style="text-align: end">
+              <a-typography-text class="temperature">
+                {{ getDayNightTemperatures(day.temperatures) }}
+              </a-typography-text>
+            </a-col>
+          </a-row>
+        </template>
+      </a-collapse-panel>
+    </a-collapse>
   </a-flex>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { weatherService } from '@/services/weather.service'
-import { getDailyWeatherInfo } from '@/helpers/dailyForecast'
+import { getDailyWeatherInfo, getDayNightTemperatures } from '@/helpers/dailyForecast'
 import { getDayName } from '@/helpers/timeFormat'
-import type { WeatherForecastResponse } from '@/types/forecast'
-import type { DailyWeather } from '@/types/dailyWeather'
+import type { ForecastResult, WeatherForecastResponse } from '@/types/forecast'
 
 const props = defineProps<{
   lat: number
@@ -40,18 +50,23 @@ const props = defineProps<{
 }>()
 
 const forecast = ref<WeatherForecastResponse>()
-const dailyWeather = ref<DailyWeather[]>([])
+const dailyWeather = ref<ForecastResult[]>([])
 
 const fetchForecast = async () => {
   if (!props.lat || !props.lon) return
 
   try {
     forecast.value = await weatherService.getDailyForecast(props.lat, props.lon)
-    dailyWeather.value = getDailyWeatherInfo(forecast.value.list).slice(1, -2)
+    dailyWeather.value = getDailyWeatherInfo(forecast.value.list, forecast.value.city.timezone)
   } catch (error) {
     console.error('Error fetching forecast:', error)
   }
 }
+
+const filteredWeather = computed(() => {
+  const today = new Date().toISOString().split('T')[0]
+  return dailyWeather.value.filter((day) => day.date > today).slice(0, 4)
+})
 
 watch(() => [props.lat, props.lon], fetchForecast, { immediate: true })
 </script>
