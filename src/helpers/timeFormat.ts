@@ -1,8 +1,8 @@
-export const timeFormat = (timeInSec: number) => {
-  return new Date(timeInSec * 1000).toLocaleTimeString([], {
-    hour: '2-digit',
-    minute: '2-digit',
-  })
+export const timeFormat = (timeInSec: number, timezone: number, showSeconds = false) => {
+  const utcDate = new Date((timeInSec + timezone) * 1000)
+  const timeParts = utcDate.toUTCString().split(' ')[4].split(':')
+
+  return showSeconds ? timeParts.join(':') : `${timeParts[0]}:${timeParts[1]}`
 }
 
 export const getDayName = (dateString: string) => {
