@@ -30,8 +30,8 @@ const fetchCities = async (query: string) => {
     if (isFetchCanceled.value) return
 
     cityOptions.value = data.map((city) => ({
-      value: `${city.name}, ${city.state}, ${city.country}`,
-      label: `${city.name}, ${city.state}, ${city.country}`,
+      value: `${city.name}, ${city.state || ''}, ${city.country}`,
+      label: `${city.name}, ${city.state || ''}, ${city.country}`,
       key: `${city.name}${Math.random()}`,
     }))
   } catch (error) {

@@ -22,7 +22,12 @@
     </a-flex>
   </a-drawer>
 
-  <a-float-button type="primary" @click="isOpen = true" class="float-btn">
+  <a-float-button
+    type="primary"
+    class="float-btn"
+    @click="isOpen = true"
+    :badge="{ count: savedWeatherStore.savedWeather.length }"
+  >
     <HeartOutlined />
   </a-float-button>
 </template>

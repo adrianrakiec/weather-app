@@ -38,9 +38,7 @@ export const useSavedWeatherStore = defineStore('savedWeather', () => {
   }
 
   const addToHistory = (entry: SearchEntry) => {
-    const exists = history.value.some(
-      (item) => item.name === entry.name && item.lat === entry.lat && item.lon === entry.lon,
-    )
+    const exists = history.value.some((item) => item.name === entry.name)
 
     if (!exists) {
       history.value.unshift(entry)
