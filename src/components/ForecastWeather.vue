@@ -1,5 +1,5 @@
 <template>
-  <a-flex vertical gap="small">
+  <a-flex vertical gap="small" style="padding-bottom: 2em">
     <a-flex justify="space-between" align="center">
       <a-typography-title :level="3" class="title"> Next 4-day forecast </a-typography-title>
     </a-flex>
@@ -15,17 +15,17 @@
       >
         <template #header>
           <a-row align="middle">
-            <a-col :span="6">
+            <a-col :span="8">
               <a-typography-text class="day-name">{{ getDayName(day.date) }}</a-typography-text>
             </a-col>
-            <a-col :span="14">
+            <a-col :span="10">
               <img
                 :src="`/weather/${day.temperatures[Math.floor(day.temperatures.length / 2)].icon}.png`"
                 alt="weather icon"
                 class="weather-icon"
               />
             </a-col>
-            <a-col :span="4" style="text-align: end">
+            <a-col :span="6" style="text-align: end">
               <a-typography-text class="temperature">
                 {{ getDayNightTemperatures(day.temperatures) }}
               </a-typography-text>
@@ -85,7 +85,7 @@ watch(() => [props.lat, props.lon], fetchForecast, { immediate: true })
 
 .day-name {
   font-weight: bold;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
 }
 
 .weather-icon {
