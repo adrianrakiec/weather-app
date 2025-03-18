@@ -3,10 +3,10 @@ import { timeFormat } from '@/helpers/timeFormat'
 
 describe.concurrent('time format', () => {
   test('check example sunrise time', () => {
-    expect(timeFormat(1741582425)).toBe('05:53')
+    expect(timeFormat(1741582425, 3600)).toBe('05:53')
   });
 
   test('check example sunset time', () => {
-    expect(timeFormat(1741623689)).toBe('17:21')
+    expect(timeFormat(1741623689, 3600)).toBe('17:21')
   })
 })
