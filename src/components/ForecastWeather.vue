@@ -32,6 +32,7 @@
             </a-col>
           </a-row>
         </template>
+        <LineChart :temperatures="day.temperatures" />
       </a-collapse-panel>
     </a-collapse>
   </a-flex>
@@ -43,6 +44,7 @@ import { weatherService } from '@/services/weather.service'
 import { getDailyWeatherInfo, getDayNightTemperatures } from '@/helpers/dailyForecast'
 import { getDayName } from '@/helpers/timeFormat'
 import type { ForecastResult, WeatherForecastResponse } from '@/types/forecast'
+import LineChart from './LineChart.vue'
 
 const props = defineProps<{
   lat: number
