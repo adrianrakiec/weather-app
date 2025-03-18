@@ -1,5 +1,16 @@
 <template>
-  <Line :data="chartData" :options="chartOptions" />
+  <div>
+    <Line :data="chartData" :options="chartOptions" />
+  </div>
+  <a-flex justify="space-between" align="center" style="padding-left: 0.7em">
+    <img
+      v-for="{ icon, time } in props.temperatures"
+      :key="time"
+      :src="`/weather/${icon}.png`"
+      :alt="`Weather icon for: ${time}`"
+      class="weather-icon"
+    />
+  </a-flex>
 </template>
 
 <script setup lang="ts">
@@ -31,9 +42,9 @@ const chartData = computed(() => ({
     {
       data: props.temperatures.map((t) => Math.round(t.temperature)),
       borderColor: '#ff6384',
-      backgroundColor: 'rgba(255, 99, 132, 0.2)',
+      backgroundColor: '#ff6384',
       tension: 0.3,
-      pointRadius: 10,
+      pointRadius: 5,
     },
   ],
 }))
@@ -41,5 +52,21 @@ const chartData = computed(() => ({
 const chartOptions = {
   responsive: true,
   maintainAspectRatio: false,
+  scales: {
+    y: {
+      beginAtZero: true,
+      suggestedMin: 0,
+      grid: {
+        color: (context: { tick: { value: number } }) =>
+          context.tick.value === 0 ? '#000' : '#fff',
+      },
+    },
+  },
 }
 </script>
+
+<style scoped>
+.weather-icon {
+  width: 30px;
+}
+</style>
