@@ -1,5 +1,5 @@
 <template>
-  <a-flex vertical gap="small" style="padding-bottom: 2em">
+  <a-flex vertical gap="small" style="padding-bottom: 3em">
     <a-flex justify="space-between" align="center">
       <a-typography-title :level="3" class="title"> Next 4-day forecast </a-typography-title>
     </a-flex>

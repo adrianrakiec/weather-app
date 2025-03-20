@@ -4,10 +4,12 @@ import { weatherService } from '@/services/weather.service'
 import { useNotificationStore } from '@/stores/useNotificationStore'
 import type { CityInfo } from '@/types/city'
 import type { WeatherResponse } from '@/types/weather'
+import type { AirQuality } from '@/types/airQuality'
 
 export const useWeatherStore = defineStore('weather', () => {
   const results = ref<CityInfo[]>([])
   const weatherData = ref<WeatherResponse | null>(null)
+  const airQualityData = ref<AirQuality | null>(null)
   const loading = ref(false)
   const searchExecuted = ref(false)
   const hasNavigatedAway = ref(false)
@@ -53,5 +55,26 @@ export const useWeatherStore = defineStore('weather', () => {
     return weatherData.value
   }
 
-  return { results, loading, isResults, showEmptyState, hasNavigatedAway, searchCity, fetchWeather }
+  const fetchAirQuality = async (lat: number, lon: number) => {
+    try {
+      airQualityData.value = await weatherService.getAirQualityData(lat, lon)
+    } catch (e) {
+      notificationStore.handleError(e)
+    } finally {
+      loading.value = false
+    }
+
+    return airQualityData.value
+  }
+
+  return {
+    results,
+    loading,
+    isResults,
+    showEmptyState,
+    hasNavigatedAway,
+    searchCity,
+    fetchWeather,
+    fetchAirQuality,
+  }
 })

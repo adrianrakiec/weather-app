@@ -1,4 +1,5 @@
 import { http } from '@/services/http.service'
+import type { AirQuality } from '@/types/airQuality'
 import type { CityInfo } from '@/types/city'
 import type { WeatherForecastResponse } from '@/types/forecast'
 import type { WeatherResponse } from '@/types/weather'
@@ -46,6 +47,18 @@ export const weatherService = {
       return response.data
     } catch {
       throw new Error('Error fetching forecast')
+    }
+  },
+
+  async getAirQualityData(lat: number, lon: number) {
+    try {
+      const response = await http.get<AirQuality>(`${URL}/data/2.5/air_pollution`, {
+        params: { lat, lon },
+      })
+
+      return response.data
+    } catch {
+      throw new Error('Error fetching air quality data')
     }
   },
 }

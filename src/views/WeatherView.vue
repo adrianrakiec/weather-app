@@ -23,9 +23,11 @@
 
   <a-layout-content>
     <a-flex vertical align="center">
-      <a-skeleton v-if="!data" active />
+      <a-skeleton v-if="!data || !airQuality" active />
       <a-tabs v-else class="weather-tabs" size="large">
-        <a-tab-pane key="1" tab="Current"><BasicWeather :data="data" /></a-tab-pane>
+        <a-tab-pane key="1" tab="Current"
+          ><BasicWeather :data="data" :airQuality="airQuality"
+        /></a-tab-pane>
         <a-tab-pane key="2" tab="Forecast"
           ><ForecastWeather :lat="data.coord.lat" :lon="data.coord.lon"
         /></a-tab-pane>
@@ -45,6 +47,7 @@ import type { WeatherResponse } from '@/types/weather'
 import type { SearchEntry } from '@/types/search'
 import BasicWeather from '@/components/BasicWeather.vue'
 import ForecastWeather from '@/components/ForecastWeather.vue'
+import type { AirQuality } from '@/types/airQuality'
 
 const route = useRoute()
 const router = useRouter()
@@ -53,6 +56,7 @@ const savedWeatherStore = useSavedWeatherStore()
 const notificationStore = useNotificationStore()
 
 const data = ref<WeatherResponse | null>(null)
+const airQuality = ref<AirQuality | null>(null)
 
 const isSaved = computed(() => {
   if (!data.value) return false
@@ -89,6 +93,7 @@ const fetchWeatherData = async () => {
   const lat = Number(route.query.lat)
   const lon = Number(route.query.lon)
   data.value = await weatherStore.fetchWeather(lat, lon)
+  airQuality.value = await weatherStore.fetchAirQuality(lat, lon)
 
   if (data.value) {
     savedWeatherStore.addToHistory({ name: data.value.name, lat, lon })

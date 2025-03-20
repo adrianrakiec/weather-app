@@ -6,6 +6,27 @@
         <a-typography-text class="info-value">{{ localTime }}</a-typography-text>
       </a-flex>
 
+      <a-popover trigger="hover" class="air-quality-btn" placement="bottomRight">
+        <template #content>
+          <a-typography-paragraph>
+            Air Quality Index: {{ props.airQuality.list[0].main.aqi }} -
+            <span :style="{ fontWeight: 'bold', color: aqiColor }">{{ aqiText }}</span>
+          </a-typography-paragraph>
+          <a-typography-text> </a-typography-text>
+          <a-table
+            :columns="aqiColumns"
+            :data-source="aqiData"
+            size="small"
+            :pagination="false"
+            bordered
+          />
+
+          <a-typography-title :level="5" style="margin-top: 0.2em">AQI Levels:</a-typography-title>
+          <a-typography-paragraph>1 (Good) - 5 (Very Poor)</a-typography-paragraph>
+        </template>
+        <a-button shape="circle" size="large">?</a-button>
+      </a-popover>
+
       <img
         :src="`/weather/${data.weather[0].icon}.png`"
         :alt="data.weather[0].main"
@@ -54,17 +75,43 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { timeFormat } from '@/helpers/timeFormat'
 import type { WeatherResponse } from '@/types/weather'
+import type { AirQuality } from '@/types/airQuality'
 
 interface BasicWeatherProps {
   data: WeatherResponse
+  airQuality: AirQuality
 }
 
 const props = defineProps<BasicWeatherProps>()
 
 const localTime = ref(timeFormat(Math.floor(Date.now() / 1000), props.data.timezone, true))
+
+const aqiText = computed(() => {
+  const aqiLevels = ['Good', 'Fair', 'Moderate', 'Poor', 'Very Poor']
+  return aqiLevels[(props.airQuality.list[0].main.aqi || 1) - 1]
+})
+
+const aqiColor = computed(() => {
+  const colors = ['#2ECC71', '#F1C40F', '#E67E22', '#E74C3C', '#8E44AD']
+  return colors[(props.airQuality.list[0].main.aqi || 1) - 1]
+})
+
+const aqiColumns = [
+  { title: 'Pollutant', dataIndex: 'component', key: 'component' },
+  { title: 'Value (µg/m³)', dataIndex: 'value', key: 'value' },
+]
+
+const aqiData = computed(() => {
+  const components = props.airQuality.list[0].components
+  return (Object.keys(components) as Array<keyof typeof components>).map((key) => ({
+    key,
+    component: key.toUpperCase(),
+    value: components[key],
+  }))
+})
 
 let intervalId: number
 
@@ -101,6 +148,14 @@ onUnmounted(() => {
   background: #f0f0f0;
   padding: 0.5em 1em;
   margin-bottom: 1em;
+}
+
+.air-quality-btn {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 1em;
+  font-weight: bold;
 }
 
 .info-label {

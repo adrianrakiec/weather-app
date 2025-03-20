@@ -55,9 +55,8 @@ const removeLocation = (location: SearchEntry) => {
 
 <style scoped>
 .float-btn {
-  position: absolute;
-  bottom: 2em;
-  right: 2em;
+  bottom: 1.2em;
+  right: 1.2em;
 }
 
 .location-card {
