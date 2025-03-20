@@ -8,6 +8,7 @@ Weather App is a simple and user-friendly application that provides real-time we
 -  Pinia
 -  Axios
 -  Chart.js
+-  Leaflet
 -  Ant Design Vue.
 
 ## Project Setup
