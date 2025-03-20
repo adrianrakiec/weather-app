@@ -1,14 +1,7 @@
 <template>
   <a-layout-header class="header">
     <div class="container">
-      <a-flex align="center" justify="space-between" class="header-flex">
-        <a-flex align="center">
-          <a-button type="primary" @click="goBack"><ArrowLeftOutlined /></a-button>
-          <a-typography-title :level="3" class="title">{{
-            data?.name || 'Loading...'
-          }}</a-typography-title>
-        </a-flex>
-
+      <a-flex justify="end">
         <a-button @click="toggleSavedWeather">
           <template v-if="isSaved">
             <DeleteOutlined />
@@ -17,6 +10,14 @@
             <PlusCircleOutlined />
           </template>
         </a-button>
+      </a-flex>
+      <a-flex align="center" justify="space-between" class="header-flex">
+        <a-flex align="center">
+          <a-button type="primary" @click="goBack"><ArrowLeftOutlined /></a-button>
+          <a-typography-title :level="3" class="title">{{
+            data?.name || 'Loading...'
+          }}</a-typography-title>
+        </a-flex>
       </a-flex>
     </div>
   </a-layout-header>

@@ -22,7 +22,9 @@
           />
 
           <a-typography-title :level="5" style="margin-top: 0.2em">AQI Levels:</a-typography-title>
-          <a-typography-paragraph>1 (Good) - 5 (Very Poor)</a-typography-paragraph>
+          <a-typography-paragraph style="margin-bottom: 0"
+            >1 (Good) - 5 (Very Poor)</a-typography-paragraph
+          >
         </template>
         <a-button shape="circle" size="large">?</a-button>
       </a-popover>
