@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import WeatherView from '@/views/WeatherView.vue'
+import MapView from '@/views/MapView.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -14,6 +15,11 @@ const router = createRouter({
       path: '/weather',
       name: 'weather',
       component: WeatherView,
+    },
+    {
+      path: '/weather-map',
+      name: 'map',
+      component: MapView,
     },
     {
       path: '/:pathMatch(.*)*',

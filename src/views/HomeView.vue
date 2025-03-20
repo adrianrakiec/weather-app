@@ -1,6 +1,7 @@
 <template>
   <a-layout-header class="header">
     <a-typography-title :level="2" class="title"> 🌤️Weather App </a-typography-title>
+    <router-link to="/weather-map" class="link">(Check weather map)</router-link>
   </a-layout-header>
 
   <a-layout-content>
@@ -70,7 +71,14 @@ onBeforeRouteLeave(() => {
 }
 
 .title {
-  padding: 1em;
+  padding: 1em 1em 0 1em;
+}
+
+.link {
+  display: inline-block;
+  color: inherit;
+  font-size: 0.8rem;
+  margin-bottom: 2em;
 }
 
 .content {
