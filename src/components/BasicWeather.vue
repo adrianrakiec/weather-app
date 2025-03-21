@@ -8,23 +8,28 @@
 
       <a-popover trigger="hover" class="air-quality-btn" placement="bottomRight">
         <template #content>
-          <a-typography-paragraph>
-            Air Quality Index: {{ props.airQuality.list[0].main.aqi }} -
-            <span :style="{ fontWeight: 'bold', color: aqiColor }">{{ aqiText }}</span>
-          </a-typography-paragraph>
-          <a-typography-text> </a-typography-text>
-          <a-table
-            :columns="aqiColumns"
-            :data-source="aqiData"
-            size="small"
-            :pagination="false"
-            bordered
-          />
+          <div v-if="props.airQuality">
+            <a-typography-paragraph>
+              Air Quality Index: {{ props.airQuality.list[0].main.aqi }} -
+              <span :style="{ fontWeight: 'bold', color: aqiColor }">{{ aqiText }}</span>
+            </a-typography-paragraph>
+            <a-typography-text> </a-typography-text>
+            <a-table
+              :columns="aqiColumns"
+              :data-source="aqiData"
+              size="small"
+              :pagination="false"
+              bordered
+            />
 
-          <a-typography-title :level="5" style="margin-top: 0.2em">AQI Levels:</a-typography-title>
-          <a-typography-paragraph style="margin-bottom: 0"
-            >1 (Good) - 5 (Very Poor)</a-typography-paragraph
-          >
+            <a-typography-title :level="5" style="margin-top: 0.2em"
+              >AQI Levels:</a-typography-title
+            >
+            <a-typography-paragraph style="margin-bottom: 0"
+              >1 (Good) - 5 (Very Poor)</a-typography-paragraph
+            >
+          </div>
+          <a-empty v-else description="No informations abou air quality" />
         </template>
         <a-button shape="circle" size="large">?</a-button>
       </a-popover>
@@ -84,7 +89,7 @@ import type { AirQuality } from '@/types/airQuality'
 
 interface BasicWeatherProps {
   data: WeatherResponse
-  airQuality: AirQuality
+  airQuality: AirQuality | null
 }
 
 const props = defineProps<BasicWeatherProps>()
@@ -92,11 +97,13 @@ const props = defineProps<BasicWeatherProps>()
 const localTime = ref(timeFormat(Math.floor(Date.now() / 1000), props.data.timezone, true))
 
 const aqiText = computed(() => {
+  if (!props.airQuality) return
   const aqiLevels = ['Good', 'Fair', 'Moderate', 'Poor', 'Very Poor']
   return aqiLevels[(props.airQuality.list[0].main.aqi || 1) - 1]
 })
 
 const aqiColor = computed(() => {
+  if (!props.airQuality) return
   const colors = ['#2ECC71', '#F1C40F', '#E67E22', '#E74C3C', '#8E44AD']
   return colors[(props.airQuality.list[0].main.aqi || 1) - 1]
 })
@@ -107,6 +114,7 @@ const aqiColumns = [
 ]
 
 const aqiData = computed(() => {
+  if (!props.airQuality) return
   const components = props.airQuality.list[0].components
   return (Object.keys(components) as Array<keyof typeof components>).map((key) => ({
     key,

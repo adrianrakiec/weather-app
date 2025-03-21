@@ -25,7 +25,7 @@ const notificationStore = useNotificationStore()
   left: 50%;
   transform: translateX(-50%);
   padding: 1em;
-  width: 300px;
+  min-width: 300px;
 }
 
 .fade-enter-active,

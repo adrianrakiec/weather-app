@@ -23,5 +23,11 @@ defineProps<Props>()
 <style scoped>
 .city-item {
   color: inherit;
+  padding: 0.3em;
+  border-radius: 1em;
+}
+
+.city-item:focus {
+  border: 1px solid #1677ff;
 }
 </style>

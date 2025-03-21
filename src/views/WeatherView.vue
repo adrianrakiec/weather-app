@@ -24,7 +24,7 @@
 
   <a-layout-content>
     <a-flex vertical align="center">
-      <a-skeleton v-if="!data || !airQuality" active />
+      <a-skeleton v-if="!data" active style="margin-top: 1em" />
       <a-tabs v-else class="weather-tabs" size="large">
         <a-tab-pane key="1" tab="Current"
           ><BasicWeather :data="data" :airQuality="airQuality"
@@ -46,9 +46,9 @@ import { useSavedWeatherStore } from '@/stores/useSavedWeatherStore'
 import { useNotificationStore } from '@/stores/useNotificationStore'
 import type { WeatherResponse } from '@/types/weather'
 import type { SearchEntry } from '@/types/search'
+import type { AirQuality } from '@/types/airQuality'
 import BasicWeather from '@/components/BasicWeather.vue'
 import ForecastWeather from '@/components/ForecastWeather.vue'
-import type { AirQuality } from '@/types/airQuality'
 
 const route = useRoute()
 const router = useRouter()
@@ -117,7 +117,7 @@ watch(
 
 <style scoped>
 .container {
-  padding: 1em;
+  padding: 1em 1em 0 1em;
 }
 
 .title {

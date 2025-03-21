@@ -1,7 +1,10 @@
 <template>
-  <a-flex justify="space-between" align="center">
-    <a-typography-title :level="3" style="padding: 1em 0 0">🗺️ Weather Map</a-typography-title>
-    <a-select v-model:value="selectedLayer" @change="updateWeatherLayer" style="min-width: 120px">
+  <a-button type="primary" @click="goBack" style="margin-top: 1em"><ArrowLeftOutlined /></a-button>
+  <a-flex justify="space-between" align="center" style="padding: 1em">
+    <a-typography-title :level="3" style="padding: 0; margin-bottom: 0"
+      >🗺️ Weather Map</a-typography-title
+    >
+    <a-select v-model:value="selectedLayer" @change="updateWeatherLayer" style="min-width: 100px">
       <a-select-option v-for="(layer, key) in weatherLayers" :key="key" :value="key">
         {{ layer.name }}
       </a-select-option>
@@ -13,12 +16,16 @@
 <script setup lang="ts">
 import { ref, onMounted, nextTick } from 'vue'
 import L, { Map, TileLayer, Marker } from 'leaflet'
+import { ArrowLeftOutlined } from '@ant-design/icons-vue'
 import { weatherLayers } from '@/helpers/weatherLayers'
+import { useRouter } from 'vue-router'
 
 const map = ref<Map | null>(null)
 const weatherLayer = ref<TileLayer | null>(null)
 const userMarker = ref<Marker | null>(null)
 const selectedLayer = ref<string>('temp_new')
+
+const router = useRouter()
 
 const API_KEY = import.meta.env.VITE_API_KEY
 
@@ -59,6 +66,10 @@ const updateWeatherLayer = (layerKey: string) => {
   )
 
   weatherLayer.value.addTo(map.value as Map)
+}
+
+const goBack = () => {
+  router.push('/')
 }
 </script>
 
